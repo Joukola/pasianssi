@@ -57,7 +57,7 @@ function autoFinish(){
   else{
    const p=pile(action.where),c=p.at(-1);
    if(!c||c.s!==action.s||c.n!==action.n){stopAuto();render();return}
-   const destination=found.findIndex(p=>!p.length||p[0].s===c.s);
+   let destination=found.findIndex(p=>p.length&&p[0].s===c.s);if(destination<0)destination=found.findIndex(p=>!p.length);
    if(destination<0||!canMove({where:action.where,index:p.length-1},'f'+destination)){stopAuto();render();return}
    selected={where:action.where,index:p.length-1};move('f'+destination);
   }
