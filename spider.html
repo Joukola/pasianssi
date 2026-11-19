@@ -26,4 +26,35 @@ window.addEventListener('pointercancel',()=>{drag?.ghost?.remove();drag?.hidden?
 $('new').onclick=()=>$('confirm').showModal();$('cancel').onclick=()=>$('confirm').close();$('start').onclick=()=>{$('confirm').close();fresh()};$('undo').onclick=()=>{if(busy||!history.length)return;({columns,stock,removed,won}=JSON.parse(history.pop()));selected=null;render()};$('difficulty').onchange=e=>{difficulty=Number(e.target.value);fresh()};$('sound').onclick=()=>{sound=!sound;$('sound').textContent=sound?'🔊':'🔇'};document.addEventListener('contextmenu',e=>{if(e.target.closest('.card'))e.preventDefault()});document.addEventListener('dragstart',e=>e.preventDefault());document.addEventListener('dblclick',e=>{if(e.target.closest('#board'))e.preventDefault()});fresh();
 </script><script>
 (function(){const names={fi:{klondike:'♠ Siskon parempi pasianssi',spider:'♠ Spider – Siskon parempi pasianssi'},en:{klondike:'♠ Sisko’s Better Solitaire',spider:'♠ Spider – Sisko’s Better Solitaire'},hu:{klondike:'♠ Sisko jobb pasziánsza',spider:'♠ Spider – Sisko jobb pasziánsza'}};function apply(lang){if(!names[lang])lang='fi';localStorage.setItem('pasianssi-lang',lang);document.documentElement.lang=lang;const title=names[lang].spider;document.getElementById('game-title').textContent=title;document.title=title;document.querySelectorAll('.lang-flags button').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang))}document.querySelectorAll('.lang-flags button').forEach(b=>b.addEventListener('click',()=>apply(b.dataset.lang)));apply(localStorage.getItem('pasianssi-lang')||'fi')})();
+</script><style id="side-menu-v1">
+.side-menu-tab{position:fixed;right:0;top:25%;z-index:6002;border-radius:12px 0 0 12px!important;padding:16px 10px!important;background:#286846!important;color:#fff!important;border:1px solid #9cba9f!important;font-size:22px!important;box-shadow:0 2px 12px #0005!important;touch-action:manipulation}
+.side-menu-panel{position:fixed;right:0;top:0;bottom:0;width:min(320px,86vw);padding:22px 16px;z-index:6001;overflow-y:auto;background:#f5faf5;color:#173c2d;box-shadow:-8px 0 28px #0005;transform:translateX(105%);transition:transform .22s ease;visibility:hidden}
+.side-menu-panel.open{transform:translateX(0);visibility:visible}
+.side-menu-panel h2{font-size:19px;margin:4px 0 18px}.side-menu-panel h3{font-size:16px;margin:16px 0 10px}
+.side-menu-panel .menu-section>*{display:block;width:100%;margin:8px 0;text-align:center;box-sizing:border-box}
+.side-menu-panel .menu-section label{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.side-menu-panel button,.side-menu-panel select{padding:11px!important;font-size:15px!important;min-height:42px;color:#173c2d}
+.side-menu-panel .menu-section[hidden]{display:none!important}
+.side-menu-shade{position:fixed;inset:0;z-index:6000;background:#0006}
+.side-menu-shade[hidden]{display:none!important}
+.side-menu-panel .menu-back{background:#e0efe3!important}
+</style><script id="side-menu-controller-v1">
+(()=>{const tr={fi:['Valikko','Asetukset','Lisätoiminnot','Lisää asetuksia','Takaisin'],en:['Menu','Settings','Advanced','More settings','Back'],hu:['Menü','Beállítások','Haladó','További beállítások','Vissza']};
+const shade=document.createElement('div');shade.className='side-menu-shade';shade.hidden=true;
+const panel=document.createElement('aside');panel.className='side-menu-panel';panel.setAttribute('aria-label','Game settings');
+panel.innerHTML='<h2 id="menu-title"></h2><div class="menu-section" id="menu-basic"></div><div class="menu-section" id="menu-advanced" hidden></div><button type="button" id="menu-more"></button><button type="button" id="menu-back" class="menu-back" hidden></button>';
+const tab=document.createElement('button');tab.type='button';tab.className='side-menu-tab';tab.setAttribute('aria-label','Open menu');tab.textContent='‹';
+document.body.append(shade,panel,tab);
+const basic=panel.querySelector('#menu-basic'),advanced=panel.querySelector('#menu-advanced');
+function move(el,dest){if(el)dest.appendChild(el)}
+move(document.querySelector('header button[onclick*="index.html"]'),basic);move(document.querySelector('#difficulty'),basic);move(document.querySelector('#new'),basic);move(document.querySelector('#undo'),basic);move(document.querySelector('#sound'),advanced);
+const more=panel.querySelector('#menu-more'),back=panel.querySelector('#menu-back');
+function localize(){let l=tr[document.documentElement.lang]||tr.fi;panel.querySelector('#menu-title').textContent=advanced.hidden?l[1]:l[2];more.textContent=l[3];back.textContent=l[4];tab.setAttribute('aria-label',l[0]);}
+function level(n){basic.hidden=n!==1;advanced.hidden=n!==2;more.hidden=n===2;back.hidden=n===1;localize()}
+function toggle(open){panel.classList.toggle('open',open);shade.hidden=!open;tab.textContent=open?'›':'‹';tab.setAttribute('aria-expanded',String(open));if(open)level(1)}
+tab.addEventListener('click',()=>toggle(!panel.classList.contains('open')));shade.addEventListener('click',()=>toggle(false));more.addEventListener('click',()=>level(2));back.addEventListener('click',()=>level(1));
+panel.addEventListener('click',e=>{if(e.target.closest('#new')||e.target.closest('nav button')||e.target.closest('button[onclick]'))toggle(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false)});
+document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>queueMicrotask(localize)));localize();
+})();
 </script></body></html>
