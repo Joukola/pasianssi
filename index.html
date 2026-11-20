@@ -89,20 +89,18 @@ if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.ser
 .side-menu-shade[hidden]{display:none!important}
 .side-menu-panel .menu-back{background:#e0efe3!important}
 </style><script id="side-menu-controller-v1">
-(()=>{const tr={fi:['Valikko','Asetukset','Lisätoiminnot','Lisää asetuksia','Takaisin'],en:['Menu','Settings','Advanced','More settings','Back'],hu:['Menü','Beállítások','Haladó','További beállítások','Vissza']};
+(()=>{const tr={fi:'Asetukset',en:'Settings',hu:'Beállítások'};
 const shade=document.createElement('div');shade.className='side-menu-shade';shade.hidden=true;
 const panel=document.createElement('aside');panel.className='side-menu-panel';panel.setAttribute('aria-label','Game settings');
-panel.innerHTML='<h2 id="menu-title"></h2><div class="menu-section" id="menu-basic"></div><div class="menu-section" id="menu-advanced" hidden></div><button type="button" id="menu-more"></button><button type="button" id="menu-back" class="menu-back" hidden></button>';
+panel.innerHTML='<h2 id="menu-title"></h2><div class="menu-section" id="menu-basic"></div>';
 const tab=document.createElement('button');tab.type='button';tab.className='side-menu-tab';tab.setAttribute('aria-label','Open menu');tab.textContent='‹';
 document.body.append(shade,panel,tab);
-const basic=panel.querySelector('#menu-basic'),advanced=panel.querySelector('#menu-advanced');
+const basic=panel.querySelector('#menu-basic');
 function move(el,dest){if(el)dest.appendChild(el)}
-move(document.querySelector('header nav'),basic);move(document.querySelector('#drawMode'),basic);move(document.querySelector('#sound'),basic);move(document.querySelector('#finish'),advanced);move(document.querySelector('#cheat'),advanced);
-const more=panel.querySelector('#menu-more'),back=panel.querySelector('#menu-back');
-function localize(){let l=tr[document.documentElement.lang]||tr.fi;panel.querySelector('#menu-title').textContent=advanced.hidden?l[1]:l[2];more.textContent=l[3];back.textContent=l[4];tab.setAttribute('aria-label',l[0]);}
-function level(n){basic.hidden=n!==1;advanced.hidden=n!==2;more.hidden=n===2;back.hidden=n===1;localize()}
-function toggle(open){panel.classList.toggle('open',open);shade.hidden=!open;tab.textContent=open?'›':'‹';tab.setAttribute('aria-expanded',String(open));if(open)level(1)}
-tab.addEventListener('click',()=>toggle(!panel.classList.contains('open')));shade.addEventListener('click',()=>toggle(false));more.addEventListener('click',()=>level(2));back.addEventListener('click',()=>level(1));
+move(document.querySelector('header nav'),basic);move(document.querySelector('#drawMode'),basic);move(document.querySelector('#sound'),basic);move(document.querySelector('#finish'),basic);move(document.querySelector('#cheat'),basic);
+function localize(){const lang=document.documentElement.lang;panel.querySelector('#menu-title').textContent=tr[lang]||tr.fi;tab.setAttribute('aria-label',lang==='en'?'Menu':lang==='hu'?'Menü':'Valikko');}
+function toggle(open){panel.classList.toggle('open',open);shade.hidden=!open;tab.textContent=open?'›':'‹';tab.setAttribute('aria-expanded',String(open));if(open)localize()}
+tab.addEventListener('click',()=>toggle(!panel.classList.contains('open')));shade.addEventListener('click',()=>toggle(false));
 panel.addEventListener('click',e=>{if(e.target.closest('#new')||e.target.closest('nav button')||e.target.closest('button[onclick]'))toggle(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false)});
 document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>queueMicrotask(localize)));localize();
