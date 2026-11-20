@@ -101,7 +101,7 @@ move(document.querySelector('header nav'),basic);move(document.querySelector('#d
 function localize(){const lang=document.documentElement.lang;panel.querySelector('#menu-title').textContent=tr[lang]||tr.fi;tab.setAttribute('aria-label',lang==='en'?'Menu':lang==='hu'?'Menü':'Valikko');}
 function toggle(open){panel.classList.toggle('open',open);shade.hidden=!open;tab.textContent=open?'›':'‹';tab.setAttribute('aria-expanded',String(open));if(open)localize()}
 tab.addEventListener('click',()=>toggle(!panel.classList.contains('open')));shade.addEventListener('click',()=>toggle(false));
-panel.addEventListener('click',e=>{if(e.target.closest('#new')||e.target.closest('nav button')||e.target.closest('button[onclick]'))toggle(false)});
+panel.addEventListener('click',e=>{if(e.target.closest('#new')||e.target.closest('#cheat')||e.target.closest('nav button')||e.target.closest('button[onclick]'))toggle(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false)});
 document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>queueMicrotask(localize)));localize();
 })();
