@@ -1,3 +1,3 @@
-# Siskon parempi pasianssi
+# Parempi pasianssi
 
 Julkaisutesti: Cloudflare GitHub -yhteyden tarkistus 11.11.2026.
